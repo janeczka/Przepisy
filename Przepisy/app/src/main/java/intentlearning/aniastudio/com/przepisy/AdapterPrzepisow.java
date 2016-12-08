@@ -25,19 +25,20 @@ import java.util.Locale;
 public class AdapterPrzepisow  extends ArrayAdapter<Przepisy>{
     Context mContext;
     int mResourceId;
-    Przepisy mPrzepisy[]=null;
-    Przepisy mPrzepisyWynikSearcha[]=null;
+    public int mValue;
+    Przepisy mPrzepisy[]=null; //to jest to samo co -> static List<Przepisy> mData;
+    Przepisy mPrzepisyWynikSearcha[]=null; //to chyba mozna uzunac
     Przepisy mTemporaryPrzepisy[]=null;
-    static List<Przepisy> data;
-    static ArrayList<Przepisy> arrayList;
+   // static List<Przepisy> data;
+ //   static ArrayList<Przepisy> arrayList;
 
 
-    public AdapterPrzepisow(Context context, int resourceId, Przepisy[] przepisy, Przepisy[] przpisyWynikSearcha) {
+    public AdapterPrzepisow(Context context, int resourceId, Przepisy[] przepisy) {
         super(context, resourceId, przepisy);
         this.mContext = context;
         this.mResourceId = resourceId;
-        this.mPrzepisy = przepisy;
-        this.mPrzepisyWynikSearcha = przpisyWynikSearcha;
+        this.mPrzepisy = przepisy; // to jest to samo co -> this.mData = data;
+        this.mPrzepisyWynikSearcha = mPrzepisy;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class AdapterPrzepisow  extends ArrayAdapter<Przepisy>{
         PlaceHolder placeHolder = null;
         if (row == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
-            row = inflater.inflate(mResourceId, parent, false);
+            row = inflater.inflate(mResourceId, parent, false); // identyko ->  row = inflater.inflate(R.layout.lista_szablon, null);
             placeHolder = new PlaceHolder();
 
             placeHolder.tytulPrzepisu = (TextView) row.findViewById(R.id.row_text);
@@ -66,7 +67,7 @@ public class AdapterPrzepisow  extends ArrayAdapter<Przepisy>{
         }
 
 
-        Przepisy przepis = mPrzepisy[position];
+        Przepisy przepis = mPrzepisy[position]; // identico -> Przepisy przepis = mData.get(position);
 
 
 
@@ -85,16 +86,27 @@ public class AdapterPrzepisow  extends ArrayAdapter<Przepisy>{
     }
 
 
-    public void Filter(String charText) {
+    public void filter(String charText) {
         charText = charText.toLowerCase(Locale.getDefault());
-        mPrzepisyWynikSearcha=null;
+        mValue = 0;
+        mPrzepisy=null;
+        //mPrzepisyWynikSearcha=null;
         if (charText.length() == 0) {
-            mPrzepisyWynikSearcha=mPrzepisy;
+            mPrzepisy = mPrzepisyWynikSearcha;
+           // mPrzepisyWynikSearcha=mPrzepisy;
         } else {
-            for (Przepisy przepisy : mPrzepisy) {
-                if (charText.length() != 0 && przepisy.getmTytul().toLowerCase(Locale.getDefault()).contains(charText)) {
+            //for (Przepisy przepisyX : mPrzepisyWynikSearcha) {
+            for(int i=0; i<mPrzepisyWynikSearcha.length; i++){
+                //if (charText.length() != 0 && przepisyX.getmTytul().toLowerCase(Locale.getDefault()).contains(charText)) {
+                if (charText.length() != 0 && mPrzepisyWynikSearcha[i].getmTytul().toLowerCase(Locale.getDefault()).contains(charText)){
                    // data.add(przepisy);
-                    mPrzepisyWynikSearcha= new Przepisy[]{przepisy};
+                   // mPrzepisyWynikSearcha= new Przepisy[]{przepisy};
+                    //mPrzepisy[i] = przepisy;
+
+                        mPrzepisy[mValue] = mPrzepisyWynikSearcha[i];
+
+                    mValue=mValue+1;
+                    //mPrzepisy = new Przepisy[]{new Przepisy (przepisyX.mTytul, przepisyX.mIdentyfikator, przepisyX.mProdukty)};
                 }
             }}
 
